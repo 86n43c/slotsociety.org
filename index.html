@@ -1,0 +1,411 @@
+<!-- made with 💘 by https://skip.bar -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7up</title>
+        
+    <meta name="description" content="777vp. Sound designer, composer, and graphic designer. Listen to my tracks and explore my work.">
+    <meta name="keywords" content="777vp, music, sound designer, composer, graphic designer, electronic music">
+    <meta name="author" content="777vp">
+    
+    <!-- open graph -->
+    <meta property="og:title" content="777vp">
+    <meta property="og:description" content="Sound designer, composer, and graphic designer">
+    <meta property="og:image" content="https://files.catbox.moe/3frhev.webp">
+    <meta property="og:type" content="website">
+    
+    <!-- twitter cards -->
+    <meta name="twitter:title" content="777vp">
+    <meta name="twitter:description" content="Sound designer, composer, and graphic designer">
+    <meta name="twitter:image" content="https://files.catbox.moe/3frhev.webp">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <link rel="icon" href="https://files.catbox.moe/3frhev.webp" type="image/png">
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+    <style>
+        body {
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .ascii-art {
+            color: #8A0DDF;
+            font-size: 16px;
+            white-space: pre;
+            text-shadow: 0 0 20px #8A0DDF;
+        }
+
+        .audio-player {
+            margin-top: 30px;
+        }
+
+        audio {
+            background: #111;
+            border-radius: 20px;
+            padding: 10px;
+        }
+
+        audio::-webkit-media-controls-panel {
+            background-color: #111;
+            border-radius: 0px;
+        }
+
+        .custom-player {
+            position: fixed;
+            bottom: 0;
+            top: auto !important;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            background: #11111100;
+            padding: 15px;
+            display: flex;
+            width: 25%;
+            align-items: center;
+            gap: 15px;
+            border-top: 1px solid #8A0DDF;
+            z-index: 1000;
+            border-radius: 0px 0px 0 0;
+        }
+
+        .play-btn {
+            background: none;
+            border: none;
+            color: #8A0DDF;
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: #8A0DDF;
+            border-radius: 2px;
+            transition: width 0.1s;
+        }
+
+        .description {
+            text-align: center;
+            color: #666;
+            margin: 20px auto;
+            max-width: 600px;
+            padding: 0 20px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .social-links a {
+            color: #8A0DDF;
+            text-decoration: none;
+            text-shadow: 0px 0px 10px #8A0DDF;
+            font-size: 24px;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #6049a5;
+            transform: scale(1.2); 
+        }
+
+        .radio {
+            position: fixed;
+            bottom: 0;
+            top: auto !important;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            background: #11111100;
+            padding: 15px;
+            display: flex;
+            width: 25%;
+            align-items: center;
+            gap: 15px;
+            border-top: 1px solid #8A0DDF;
+            z-index: 1000;
+            border-radius: 0px 0px 0 0;
+        }
+
+        .load {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .loader-gif {
+            max-width: 200px;
+        }
+
+        .loader-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        .song-info {
+            display: flex;
+            flex-direction: column;
+            min-width: 120px;
+            color: #8A0DDF;
+        }
+
+        .song-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .song-artist {
+            font-size: 12px;
+            margin: 0;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 25px;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .navbar img {
+            height: 300px;
+            width: auto;
+        }
+
+        .coover {
+            width: 50px;
+            height: 50px;
+            border-radius: 0px;
+            overflow: hidden;
+            background-color: #444;
+        }
+
+        .coover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="load">
+        <img src="https://files.catbox.moe/vfj7sq.gif" alt="Loading..." class="loader-gif">
+    </div>
+    <div class="navbar">
+        <img src="https://files.catbox.moe/vfj7sq.gif" alt="Logo">
+    </div>
+
+    <pre class="ascii-art" data-aos="fade-up">
+        ███████╗███████╗███████╗██╗   ██╗██████╗ 
+        ╚════██║╚════██║╚════██║██║   ██║██╔══██╗
+            ██╔╝    ██╔╝    ██╔╝██║   ██║██████╔╝
+           ██╔╝    ██╔╝    ██╔╝ ╚██╗ ██╔╝██╔═══╝ 
+           ██║     ██║     ██║   ╚████╔╝ ██║     
+           ╚═╝     ╚═╝     ╚═╝    ╚═══╝  ╚═╝             
+    </pre>
+    <div class="description" data-aos="fade-up" data-aos-delay="200">
+        <p>i make music that resonates with me as a person</p>
+        <p>sound designer / composer / graphic designer</p>
+    </div>
+    <div class="social-links" data-aos="fade-up" data-aos-delay="400">
+        <a href="https://soundcloud.com/777vp" target="_blank">
+            <span class="iconify" data-icon="mdi:soundcloud"></span>
+        </a>
+        <a href="https://www.youtube.com/channel/UCKtIPj3jKeYyREdGf0S8rrg" target="_blank">
+            <span class="iconify" data-icon="mdi:youtube"></span>
+        </a>
+        <a href="https://open.spotify.com/artist/7HFeai7zivdqsUGq1GBUvj" target="_blank">
+            <span class="iconify" data-icon="mdi:spotify"></span>
+        </a>
+        <a href="https://www.instagram.com/svn777vp/">
+            <span class="iconify" data-icon="mdi:instagram"></span>
+        </a>
+    </div>
+    <div class="radio">
+        <div class="coover">
+            <img id="cover" src="https://via.placeholder.com/50" alt="Album Cover">
+        </div>
+        <div class="song-info">
+            <p class="song-title">Loading...</p>
+            <p class="song-artist">Artist</p>
+        </div>
+        <div class="controls">
+            <button class="play-btn" onclick="reverse()">
+                <iconify-icon icon="mdi:skip-previous"></iconify-icon>
+            </button>
+            <button class="play-btn" onclick="playpause()">
+                <iconify-icon icon="mdi:play" id="playIcon"></iconify-icon>
+            </button>
+            <button class="play-btn" onclick="skip()">
+                <iconify-icon icon="mdi:skip-next"></iconify-icon>
+            </button>
+        </div>
+        <div class="progress-bar">
+            <div class="progress" id="progressBar"></div>
+        </div>
+    </div>
+
+    <audio id="audioPlayer" style="display:none;"></audio>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        window.addEventListener('load', function() {
+            const loader = document.querySelector('.load');
+            setTimeout(() => {
+                loader.classList.add('loader-hidden');
+            }, 1500);
+
+            preloadImages();
+        });
+
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        const songs = [
+            {
+                title: "Drama",
+                artist: "777vp",
+                url: "https://files.catbox.moe/6h9hr1.mp3",
+                cover: "https://files.catbox.moe/7cnnga.png"
+            },
+            {
+                title: "My Red Star",
+                artist: "777vp",
+                url: "https://files.catbox.moe/rii3f0.mp3",
+                cover: "https://files.catbox.moe/w4sibm.png"
+            },
+            {
+                title: "Masquerader",
+                artist: "777vp",
+                url: "https://files.catbox.moe/6anrng.mp3",
+                cover: "https://files.catbox.moe/76xsp9.png"
+            },
+            {
+                title: "VoidMix",
+                artist: "777vp",
+                url: "https://files.catbox.moe/cwpech.mp3",
+                cover: "https://files.catbox.moe/qs60pq.png"
+            },
+            {
+                title: "Untitled",
+                artist: "777vp",
+                url: "https://files.catbox.moe/qq82sj.mp3",
+                cover: "https://files.catbox.moe/jsq1hv.png"
+            },
+            {
+                title: "Untitled",
+                artist: "777vp",
+                url: "https://files.catbox.moe/wmxnm4.mp3",
+                cover: "https://files.catbox.moe/lqzjrl.png"
+            }
+        ];
+
+        let currentSongIndex = 0;
+        const audio = document.getElementById('audioPlayer');
+        const songTitle = document.querySelector('.song-title');
+        const songArtist = document.querySelector('.song-artist');
+        const cover = document.getElementById('cover');
+        const playIcon = document.getElementById('playIcon');
+        const progressBar = document.getElementById('progressBar');
+
+        function loadSong(index) {
+            const song = songs[index];
+            audio.src = song.url;
+            songTitle.textContent = song.title;
+            songArtist.textContent = song.artist;
+            cover.src = song.cover;
+        }
+
+        function skip() {
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            loadSong(currentSongIndex);
+            if (!audio.paused) audio.play();
+        }
+
+        function reverse() {
+            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+            loadSong(currentSongIndex);
+            if (!audio.paused) audio.play();
+        }
+
+        function playpause() {
+            if (audio.paused) {
+                audio.play();
+                playIcon.setAttribute('icon', 'mdi:pause');
+            } else {
+                audio.pause();
+                playIcon.setAttribute('icon', 'mdi:play');
+            }
+        }
+
+        function progress() {
+            const progress = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.width = progress + "%";
+        }
+
+        function preloadImages() {
+            const images = songs.map(song => song.cover);
+            images.forEach(src => {
+                const img = new Image();
+                img.src = src;
+            });
+        }
+
+        loadSong(0);
+
+        audio.addEventListener('timeupdate', progress);
+    </script>
+</body>
+</html>
